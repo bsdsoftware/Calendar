@@ -102,6 +102,7 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 	_dateFormatter.calendar = _calendar;
 	_daysFont = [UIFont systemFontOfSize:kDefaultDayFontSize];
 	_headerFont = [UIFont boldSystemFontOfSize:kDefaultMonthHeaderFontSize];
+	_highlightToday = NO;
 	
 	self.backgroundColor = [UIColor clearColor];
 }
@@ -426,18 +427,33 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 	cell.calendarView.daysFont = self.daysFont;
 	cell.calendarView.delegate = self;
 	cell.calendarView.headerText = [self headerTextForMonthAtIndexPath:indexPath];
-	
 	cell.calendarView.highlightedDays = nil;
-	if ([self.calendar mgc_isDate:date sameMonthAsDate:[NSDate date]])
-	{
-		NSUInteger i = [self.calendar components:NSCalendarUnitDay fromDate:date toDate:[NSDate date] options:0].day + 1;
-		cell.calendarView.highlightedDays = [NSIndexSet indexSetWithIndex:i];
-		cell.calendarView.highlightColor = [UIColor redColor];
+	
+	NSMutableIndexSet *highlitedDays = [NSMutableIndexSet indexSet];
+	
+	if(self.highlightToday){
+		if ([self.calendar mgc_isDate:date sameMonthAsDate:[NSDate date]])
+		{
+			NSUInteger i = [self.calendar components:NSCalendarUnitDay fromDate:date toDate:[NSDate date] options:0].day + 1;
+			[highlitedDays addIndex:i];
+		}
 	}
 	
+	for (NSDate *dataDaEvidenziare in self.events) {
+		if ([self.calendar mgc_isDate:date sameMonthAsDate:dataDaEvidenziare])
+		{
+			NSUInteger i = [self.calendar components:NSCalendarUnitDay fromDate:date toDate:dataDaEvidenziare options:0].day + 1;
+			[highlitedDays addIndex:i];
+		}
+
+	}
+	cell.calendarView.highlightColor = [UIColor redColor];
+	cell.calendarView.highlightedDays = highlitedDays;	
 	[cell.calendarView setNeedsDisplay];
 	return cell;
 }
+
+
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {

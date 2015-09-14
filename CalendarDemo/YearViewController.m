@@ -108,6 +108,31 @@
 		
 	self.yearCalendarView.delegate = self;
 	self.yearCalendarView.calendar = self.calendar;
+	
+	
+	NSMutableArray *dateEventi = [NSMutableArray new];
+	NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+	[formatter setDateFormat:@"dd/MM/yyyy"];
+	NSDate *date = [formatter dateFromString:@"01/09/2015"];
+	NSDate *data1 = [formatter dateFromString:@"05/09/2015"];
+	NSDate *data2 = [formatter dateFromString:@"06/09/2015"];
+	NSDate *data3 = [formatter dateFromString:@"15/09/2015"];
+	NSDate *data4 = [formatter dateFromString:@"16/09/2015"];
+	NSDate *data5 = [formatter dateFromString:@"01/10/2015"];
+	NSDate *data6 = [formatter dateFromString:@"16/10/2015"];
+	NSDate *data7 = [formatter dateFromString:@"15/10/2015"];
+	NSDate *data8 = [formatter dateFromString:@"31/10/2016"];
+	[dateEventi addObject:date];
+	[dateEventi addObject:data1];
+	[dateEventi addObject:data2];
+	[dateEventi addObject:data3];
+	[dateEventi addObject:data4];
+	[dateEventi addObject:data5];
+	[dateEventi addObject:data6];
+	[dateEventi addObject:data7];
+	[dateEventi addObject:data8];
+	
+	self.yearCalendarView.events = dateEventi;
 }
 
 - (void)didReceiveMemoryWarning

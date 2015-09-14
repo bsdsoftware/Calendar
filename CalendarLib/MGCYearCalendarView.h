@@ -90,6 +90,12 @@
 @property (nonatomic, copy) MGCDateRange *dateRange;
 
 
+
+@property(nonatomic,assign) BOOL highlightToday;
+@property(nonatomic,strong) NSArray *events;
+
+
+
 - (NSDate*)dateForMonthAtPoint:(CGPoint)pt;
 
 /*!
