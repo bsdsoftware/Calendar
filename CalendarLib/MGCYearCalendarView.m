@@ -260,12 +260,14 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 	
 	NSDate *firstInYear = [self.calendar mgc_startOfYearForDate:date];
 	
+	NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitMonth fromDate:date];
+	
 	// calc new startDate
 	NSInteger diff = [self adjustStartDate:firstInYear byNumberOfYears:-kYearsLoadingStep];
 	
 	[self.eventsView reloadData];
 	
-	NSIndexPath *top = [NSIndexPath indexPathForItem:0 inSection:diff];
+	NSIndexPath *top = [NSIndexPath indexPathForItem:dateComponents.month-1 inSection:diff];
 	[self.eventsView scrollToItemAtIndexPath:top atScrollPosition:UICollectionViewScrollPositionTop animated:animated];
 	
 	if ([self.delegate respondsToSelector:@selector(calendarYearViewDidScroll:)])
@@ -351,7 +353,7 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 	{
 		UICollectionViewFlowLayout *layout = [UICollectionViewFlowLayout new];
 		layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-				
+		
 		_eventsView = [[YearEventsView alloc]initWithFrame:CGRectNull collectionViewLayout:layout];
 		_eventsView.yearView = self;
 		_eventsView.backgroundColor = [UIColor whiteColor];
@@ -360,7 +362,7 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 		_eventsView.showsVerticalScrollIndicator = NO;
 		_eventsView.scrollsToTop = NO;
 		_eventsView.contentInset = UIEdgeInsetsMake(0, 60, 0, 60);
-
+		
 		[_eventsView registerClass:MGCYearCalendarMonthCell.class forCellWithReuseIdentifier:MonthCellReuseIdentifier];
 		[_eventsView registerClass:MGCYearCalendarMonthHeaderView.class forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:YearHeaderReuseIdentifier];
 	}
@@ -372,13 +374,13 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 - (void)layoutSubviews
 {
 	self.eventsView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
-		
+	
 	MGCMonthMiniCalendarView *cal = [MGCMonthMiniCalendarView new];
 	cal.calendar = self.calendar;
 	cal.daysFont = self.daysFont;
 	cal.headerText = [self headerTextForMonthAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
 	CGSize cellSize =  [cal preferredSizeYearWise:YES];
-
+	
 	self.layout.itemSize = cellSize;
 	self.layout.sectionInset = UIEdgeInsetsMake(10, 0, 50, 0);
 	self.layout.minimumInteritemSpacing = kCellMinimumSpacing;
@@ -390,7 +392,7 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 		CGFloat height = [self.delegate heightForYearHeaderInCalendarYearView:self];
 		self.layout.headerReferenceSize = CGSizeMake(0, height);
 	}
-
+	
 	if (!self.eventsView.superview)
 	{
 		[self addSubview:self.eventsView];
@@ -445,10 +447,10 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 			NSUInteger i = [self.calendar components:NSCalendarUnitDay fromDate:date toDate:dataDaEvidenziare options:0].day + 1;
 			[highlitedDays addIndex:i];
 		}
-
+		
 	}
 	cell.calendarView.highlightColor = [UIColor redColor];
-	cell.calendarView.highlightedDays = highlitedDays;	
+	cell.calendarView.highlightedDays = highlitedDays;
 	[cell.calendarView setNeedsDisplay];
 	return cell;
 }
@@ -457,9 +459,9 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionReusableView *reusableview = nil;
-    
-    if (kind == UICollectionElementKindSectionHeader)
+	UICollectionReusableView *reusableview = nil;
+	
+	if (kind == UICollectionElementKindSectionHeader)
 	{
 		MGCYearCalendarMonthHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:YearHeaderReuseIdentifier forIndexPath:indexPath];
 		
@@ -478,10 +480,10 @@ static const CGFloat kDefaultYearHeaderFontSize = 40;	// deafult font size for t
 		}
 		
 		[headerView setNeedsDisplay];
-        reusableview = headerView;
-    }
-
-    return reusableview;
+		reusableview = headerView;
+	}
+	
+	return reusableview;
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout

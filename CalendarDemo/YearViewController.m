@@ -133,6 +133,12 @@
 	[dateEventi addObject:data8];
 	
 	self.yearCalendarView.events = dateEventi;
+	
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	[self.yearCalendarView scrollToDate:[NSDate date] animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
